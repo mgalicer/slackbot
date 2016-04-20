@@ -8,6 +8,7 @@ require('dotenv').config();
 
 var googleSpreadsheet = require("google-spreadsheet");
 var doc = new googleSpreadsheet(GOOGLE_SPREADSHEET_TOKEN);
+var creds = require('./slackbot-3d0709e161bd.json')
 
 var bot = controller.spawn({
     token: process.env.SLACK_TOKEN
