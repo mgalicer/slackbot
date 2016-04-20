@@ -6,9 +6,6 @@ var controller = botkit.slackbot();
 var env = require('dotenv');
 require('dotenv').config();
 
-var googleSpreadsheet = require("google-spreadsheet");
-var doc = new googleSpreadsheet(GOOGLE_SPREADSHEET_TOKEN);
-
 var bot = controller.spawn({
     token: process.env.SLACK_TOKEN
 })
@@ -35,6 +32,6 @@ controller.hears([/./], ['direct_message'], function(bot, message){
     bot.startConversation(message, function(err, convo){
         convo.say("Hey there! Let's get this party started.")
         askQuestions(convo);
-    }) 
+    })
 })
 
