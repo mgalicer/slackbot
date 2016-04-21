@@ -6,6 +6,9 @@ var controller = botkit.slackbot();
 var env = require('dotenv');
 require('dotenv').config();
 
+var Firebase = require("firebase");
+var myFirebaseRef = new Firebase("https://slackbot1.firebaseio.com/");
+
 var bot = controller.spawn({
     token: process.env.SLACK_TOKEN
 })
