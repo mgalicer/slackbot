@@ -1,18 +1,30 @@
 'use strict';
 
-var botkit = require('botkit');
-var controller = botkit.slackbot();
+// var botkit = require('botkit');
+// var controller = botkit.slackbot();
+// var bot = controller.spawn({
+//     token: process.env.SLACK_TOKEN
+// })
+var async = require("async");
 
 var env = require('dotenv');
 require('dotenv').config();
 
 var googleSpreadsheet = require("google-spreadsheet");
-var doc = new googleSpreadsheet(GOOGLE_SPREADSHEET_TOKEN);
-var creds = require('./slackbot-3d0709e161bd.json')
 
-var bot = controller.spawn({
-    token: process.env.SLACK_TOKEN
-})
+var doc = new googleSpreadsheet(process.env.GOOGLE_SPREADSHEET_TOKEN);
+
+async.series([
+    function auth(step){
+        var creds = require('./slackbot-creds.json');
+        doc.useServiceAccountAuth(creds, step);
+    },
+    function getWorksheet(step){
+        doc.getInfo(function(err, info) {
+            console.log(info)
+        });
+    }
+]);
 
 bot.startRTM(function(err, bot, payload) {
     if (err) {
@@ -21,7 +33,7 @@ bot.startRTM(function(err, bot, payload) {
 });
 
 var questions = ["question 1?", "question 2?", "question 3?"];
-var responses = {}
+var responses = {};
 
 function askQuestions(convo){
     questions.forEach(function(question){

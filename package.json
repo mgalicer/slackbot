@@ -9,6 +9,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "async": "^1.5.2",
     "botkit": "^0.1.1",
     "dotenv": "^2.0.0",
     "google-spreadsheet": "^2.0.1",
