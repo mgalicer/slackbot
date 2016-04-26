@@ -23,6 +23,7 @@ bot.startRTM(function(err, bot, payload) {
 });
 
 var questions = ["question 1?", "question 2?", "question 3?"];
+var data = {}
 var responses = {}
 
 controller.hears([/./], ['direct_message'], function(bot, message){
@@ -32,26 +33,30 @@ controller.hears([/./], ['direct_message'], function(bot, message){
     })
 })
 
+// iterate through questions, ask each q
+// save each answer in an object
+// when done, send data 
+
 function askQuestions(convo, message){
     questions.forEach(function(question){
         convo.ask(question, function(response, convo){
-            var timestamp = new Date();
             responses[response.question] = response.text;
-            saveToFirebase(message.user, timestamp, responses)
             convo.next();
         })
     })
+
+    createAndSendData(convo, responses);
+
     if(new Date().getDay === 5){
         analyzeWeek(convo)
     }
 }
 
-function saveToFirebase(user, timestamp, responses){
-    usersRef.set({
-      user: {
-        timestamp: responses
-      }
-    });
+function createAndSendData(convo, responses){
+    data.user = convo.user;
+    data.timestamp = new Date();
+    data.responses = responses;
+    usersRef.push(data);
 }
 
 function analyzeWeek(convo){
