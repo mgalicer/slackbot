@@ -10,7 +10,7 @@ var Firebase = require("firebase");
 var ref = new Firebase("https://slackbot1.firebaseio.com/");
 var usersRef = ref.child("users");
 
-var fridaySayings = ["happ"]
+var fridaySayings = ["Happy Friday!", "TGIF.", "Almost time for the weekend!"];
 
 var bot = controller.spawn({
     token: process.env.SLACK_TOKEN
@@ -27,7 +27,7 @@ var responses = {}
 
 controller.hears([/./], ['direct_message'], function(bot, message){
     bot.startConversation(message, function(err, convo){
-        convo.say("Hey there! Let's get this party started.")
+        convo.say("Hey there! Let's get started.")
         askQuestions(convo, message);
     })
 })
@@ -54,6 +54,7 @@ function saveToFirebase(user, timestamp, responses){
     });
 }
 
-function analyzeWeek(){
-    convo.say()
+function analyzeWeek(convo){
+    var greeting = fridaySayings[Math.floor(Math.random() * fridaySayings.length)];
+    convo.say(greeting);
 }
