@@ -26,9 +26,9 @@ var questions = ["question 1?", "question 2?", "question 3?"];
 var data = {}
 var responses = {}
 
-controller.hears([/./], ['direct_message'], function(bot, message){
+controller.hears([/./], ['direct_message'], function(bot, message) {
     bot.startConversation(message, function(err, convo){
-        convo.say("Hey there! Let's get started.")
+        convo.say("Hey there! Let's get started.");
         askQuestions(convo, message);
     })
 })
@@ -36,8 +36,7 @@ controller.hears([/./], ['direct_message'], function(bot, message){
 // iterate through questions, ask each q
 // save each answer in an object
 // when done, send data 
-
-function askQuestions(convo, message){
+var askQuestions = new Promise(function(resolve, reject) {
     questions.forEach(function(question){
         convo.ask(question, function(response, convo){
             responses[response.question] = response.text;
@@ -45,21 +44,30 @@ function askQuestions(convo, message){
         })
     })
 
-    createAndSendData(convo, responses);
+    if(Object.keys(responses).length === questions.length){
+        resolve(responses)
+    }
+})
+
+function askQuestions(convo, message) {
+    
+    console.log(Object.keys(responses).length)
+    createAndSendData(message, responses);
 
     if(new Date().getDay === 5){
         analyzeWeek(convo)
     }
 }
 
-function createAndSendData(convo, responses){
-    data.user = convo.user;
+function createAndSendData(message, responses) {
+    data.user = message.user;
     data.timestamp = new Date();
     data.responses = responses;
     usersRef.push(data);
 }
 
-function analyzeWeek(convo){
+function analyzeWeek(convo) {
     var greeting = fridaySayings[Math.floor(Math.random() * fridaySayings.length)];
     convo.say(greeting);
 }
+
